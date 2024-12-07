@@ -1,0 +1,14 @@
+.counter {
+  display: flexbox;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.count {
+  font-size: 50rem;
+  color: #8a8a8a;
+}
+
+.button {
+  margin-top: -5rem;
+}
