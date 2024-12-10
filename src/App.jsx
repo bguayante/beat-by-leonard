@@ -132,7 +132,7 @@ function App() {
     <>
       <div className="counter">
         <div className="count">
-          {count < 1 ? <span className="clickStart">Click Start</span> : count}
+          {!running ? <span className="clickStart">Click Start</span> : count}
         </div>
         <div className="controls">
           <button onClick={handleButtonClick}>
