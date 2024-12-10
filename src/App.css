@@ -1,3 +1,33 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* line-height: 1.5; */
+  /* font-weight: 400; */
+
+  /* color-scheme: light dark; */
+  /* color: rgba(255, 255, 255, 0.87); */
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
 .counter {
   display: flexbox;
   text-align: center;
@@ -25,4 +55,24 @@ button, input {
 .clickStart {
   font-size: 5rem;
   font-weight: 700;
+}
+
+.lines {
+  width: 100%;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.line img {
+  margin-right: 10px;
+}
+
+.line hr {
+  flex-grow: 1;
+  border: none;
+  border-top: 1px solid #000;
 }

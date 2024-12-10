@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
-import snareSound from "./resources/snare.wav";
-import kickSound from "./resources/kick.wav";
+import snareSound from "./resources/wav/snare.wav";
+import kickSound from "./resources/wav/kick.wav";
+import kickSvg from "./resources/svg/kick.svg";
+import snareSvg from "./resources/svg/snare.svg";
+import metronomeSvg from "./resources/svg/metronome.svg";
 
 function App() {
   const [count, setCount] = useState(1);
@@ -164,6 +167,20 @@ function App() {
               <option value="metronome">Metronome</option>
             </select>
           ))}
+        </div>
+      </div>
+      <div className="lines">
+        <div className="line">
+          <img src={kickSvg} alt="Kick" />
+          <hr />
+        </div>
+        <div className="line">
+          <img src={snareSvg} alt="Snare" />
+          <hr />
+        </div>
+        <div className="line">
+          <img src={metronomeSvg} alt="Metronome" />
+          <hr />
         </div>
       </div>
     </>
