@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import snareSound from "./resources/wav/snare.wav";
 import kickSound from "./resources/wav/kick.wav";
-import kickSvg from "./resources/svg/kick.svg";
-import snareSvg from "./resources/svg/snare.svg";
-import metronomeSvg from "./resources/svg/metronome.svg";
+import Counter from "./components/Counter";
+import Controls from "./components/Controls";
+import useAudio from "./hooks/useAudio";
+import Timeline from "./components/Timeline";
 
 function App() {
   const [count, setCount] = useState(1);
@@ -12,177 +13,117 @@ function App() {
   const [running, setRunning] = useState(false);
   const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
   const [beatSounds, setBeatSounds] = useState(Array(4).fill("metronome"));
+  const [filledCircles, setFilledCircles] = useState(Array(4).fill(false));
+  const [dropdownVisible, setDropdownVisible] = useState(Array(4).fill(false));
   const intervalRef = useRef(null);
-  const audioContextRef = useRef(null);
-  const snareBufferRef = useRef(null);
-  const kickBufferRef = useRef(null);
 
-  const loadSample = async (url, bufferRef) => {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext ||
-        window.webkitAudioContext)();
-    }
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    bufferRef.current = await audioContextRef.current.decodeAudioData(
-      arrayBuffer
-    );
-  };
+  const {
+    audioContext,
+    snareBuffer,
+    kickBuffer,
+    loadSample,
+    playMetronomeTick,
+    playSound,
+  } = useAudio();
 
-  const playMetronomeTick = (frequency) => {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext ||
-        window.webkitAudioContext)();
-    }
+  useEffect(() => {
+    loadSample(snareSound, snareBuffer);
+    loadSample(kickSound, kickBuffer);
+  }, [loadSample, snareBuffer, kickBuffer]);
 
-    const duration = 0.05;
-    const oscillator = audioContextRef.current.createOscillator();
-    const gainNode = audioContextRef.current.createGain();
-
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(
-      frequency,
-      audioContextRef.current.currentTime
-    );
-    gainNode.gain.setValueAtTime(1, audioContextRef.current.currentTime);
-    gainNode.gain.linearRampToValueAtTime(
-      0,
-      audioContextRef.current.currentTime + duration
-    );
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContextRef.current.destination);
-
-    oscillator.start(audioContextRef.current.currentTime);
-    oscillator.stop(audioContextRef.current.currentTime + duration);
-  };
-
-  const playSound = (buffer) => {
-    if (buffer) {
-      const source = audioContextRef.current.createBufferSource();
-      source.buffer = buffer;
-      source.connect(audioContextRef.current.destination);
-      source.start();
+  const playBeat = (index) => {
+    setCount(index + 1);
+    switch (beatSounds[index]) {
+      case "metronome":
+        playMetronomeTick(audioContext, index === 0 ? 880 : 440);
+        break;
+      case "snare":
+        playSound(audioContext, snareBuffer.current);
+        break;
+      case "kick":
+        playSound(audioContext, kickBuffer.current);
+        break;
+      default:
+        break;
     }
   };
 
-  const playSequence = () => {
-    const interval = 60000 / tempo;
+  const startSequence = () => {
     let index = 0;
+    playBeat(index); // Play the first beat immediately
+    const interval = 60000 / tempo;
     intervalRef.current = setInterval(() => {
       index = (index + 1) % beatsPerMeasure;
-      if (beatSounds[index] === "metronome") {
-        playMetronomeTick(index === 0 ? 880 : 440);
-      } else if (beatSounds[index] === "snare") {
-        playSound(snareBufferRef.current);
-      } else if (beatSounds[index] === "kick") {
-        playSound(kickBufferRef.current);
-      }
-      setCount(index + 1);
+      playBeat(index);
     }, interval);
   };
 
-  const handleButtonClick = () => {
+  const handleStartStop = () => {
     if (running) {
-      setRunning(false);
       clearInterval(intervalRef.current);
+      setRunning(false);
       setCount(1);
     } else {
       setRunning(true);
-      if (beatSounds[0] === "metronome") {
-        playMetronomeTick(880);
-      } else if (beatSounds[0] === "snare") {
-        playSound(snareBufferRef.current);
-      } else if (beatSounds[0] === "kick") {
-        playSound(kickBufferRef.current);
-      }
-      playSequence();
+      startSequence();
     }
   };
 
-  const handleTempoChange = (event) => {
-    setTempo(Number(event.target.value));
+  const handleTempoChange = (newTempo) => {
+    setTempo(newTempo);
+    if (running) {
+      clearInterval(intervalRef.current);
+      startSequence();
+    }
   };
 
-  const handleBeatsPerMeasureChange = (event) => {
-    const newBeatsPerMeasure = Number(event.target.value);
-    setBeatsPerMeasure(newBeatsPerMeasure);
-    setBeatSounds(Array(newBeatsPerMeasure).fill("metronome"));
+  const handleBeatsPerMeasureChange = (newBPM) => {
+    setBeatsPerMeasure(newBPM);
+    setBeatSounds(Array(newBPM).fill("metronome"));
+    setFilledCircles(Array(newBPM).fill(false));
+    setDropdownVisible(Array(newBPM).fill(false));
   };
 
-  const handleBeatSoundChange = (index, event) => {
+  const handleBeatSoundChange = (index, sound) => {
     const newBeatSounds = [...beatSounds];
-    newBeatSounds[index] = event.target.value;
+    newBeatSounds[index] = sound;
+    setBeatSounds(newBeatSounds);
+    const newDropdownVisible = [...dropdownVisible];
+    newDropdownVisible[index] = false;
+    setDropdownVisible(newDropdownVisible);
+  };
+
+  const handleCircleClick = (index) => {
+    const newDropdownVisible = [...dropdownVisible];
+    newDropdownVisible[index] = !newDropdownVisible[index];
+    setDropdownVisible(newDropdownVisible);
+  };
+
+  const handleIconClick = (index) => {
+    const newBeatSounds = [...beatSounds];
+    newBeatSounds[index] = "none";
     setBeatSounds(newBeatSounds);
   };
 
-  useEffect(() => {
-    loadSample(snareSound, snareBufferRef);
-    loadSample(kickSound, kickBufferRef);
-  }, []);
-
-  useEffect(() => {
-    if (running) {
-      clearInterval(intervalRef.current);
-      playSequence();
-    }
-  }, [running, tempo]);
-
   return (
     <>
-      <div className="counter">
-        <div className="count">
-          {!running ? <span className="clickStart">Click Start</span> : count}
-        </div>
-        <div className="controls">
-          <button onClick={handleButtonClick}>
-            {running ? "Stop" : "Start"}
-          </button>
-          <input
-            type="number"
-            value={tempo}
-            onChange={handleTempoChange}
-            min="1"
-            max="300"
-            placeholder="Custom BPM"
-          />
-          <select
-            value={beatsPerMeasure}
-            onChange={handleBeatsPerMeasureChange}
-          >
-            {[2, 3, 4, 5, 6, 7, 8].map((value) => (
-              <option key={value} value={value}>
-                {value} Beats
-              </option>
-            ))}
-          </select>
-          {beatSounds.map((sound, index) => (
-            <select
-              key={index}
-              value={sound}
-              onChange={(event) => handleBeatSoundChange(index, event)}
-            >
-              <option value="snare">Snare</option>
-              <option value="kick">Kick</option>
-              <option value="metronome">Metronome</option>
-            </select>
-          ))}
-        </div>
-      </div>
-      <div className="lines">
-        <div className="line">
-          <img src={kickSvg} alt="Kick" />
-          <hr />
-        </div>
-        <div className="line">
-          <img src={snareSvg} alt="Snare" />
-          <hr />
-        </div>
-        <div className="line">
-          <img src={metronomeSvg} alt="Metronome" />
-          <hr />
-        </div>
-      </div>
+    <h1>Beat By Leonard</h1>
+      <Counter count={count} running={running} onClick={handleStartStop} />
+      <Controls
+        tempo={tempo}
+        beatsPerMeasure={beatsPerMeasure}
+        onTempoChange={handleTempoChange}
+        onBeatsPerMeasureChange={handleBeatsPerMeasureChange}
+      />
+      <Timeline
+        beatsPerMeasure={beatsPerMeasure}
+        beatSounds={beatSounds}
+        filledCircles={filledCircles}
+        dropdownVisible={dropdownVisible}
+        handleCircleClick={handleCircleClick}
+        handleBeatSoundChange={handleBeatSoundChange}
+        handleIconClick={handleIconClick}
+      />
     </>
   );
 }
