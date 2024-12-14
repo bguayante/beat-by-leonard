@@ -7,17 +7,81 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  font-size: 3rem;
-  color:#ffffff;
-  margin-left: 2rem;
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 5vh repeat(3, auto);
+  gap: 1rem;
+  padding: 2rem;
 }
 
-button, input, select {
-  margin: .5rem;
+.header-space {
+  grid-area: 1 / 1 / 2 / 4; /* Spans across all columns */
+}
+
+.counter-container {
+  grid-area: 2 / 2 / 3 / 3; /* Area 5 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.counter {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  width: 60vh;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.half-circle {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0,0,0,0);
+  border-radius: 50%;
+  border: 4px #ffffff solid;
+  position: absolute;
+  bottom: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.tempo-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 20rem; /* Fixed width to prevent shifting */
+}
+
+.tempo-controls button {
+  color:#ffffff;
+  background-color: rgb(0,0,0,0);
+  font-size: 9vh;
+}
+
+.count {
+  font-size: 20vh;
+  color: #ffffff;
+  margin: 0 1rem;
+  flex-shrink: 0;
+  width: 20vw;
+  text-align: center;
+}
+
+button, select {
+  margin: 0.5rem;
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: .7rem .7rem;
+  padding: 0.7rem 0.7rem;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
@@ -26,42 +90,17 @@ button, input, select {
   transition: border-color 0.25s;
 }
 
-button:hover {
+button:hover, select:hover {
   border-color: #646cff;
 }
 
-button:focus,
-button:focus-visible {
+button:focus, select:focus,
+button:focus-visible, select:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.counter {
-  display: flexbox;
-  height: 30rem;
-
-  text-align: center;
-  vertical-align: middle;
-}
-
-.count {
-  font-size: 20rem;
-  color: #ffffff;
-}
-
-.clickStart {
-  font-size: 5rem;
-  font-weight: 700;
-}
-
-.controls {
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-  color: #ffffff;
-  font-weight: bold;
-}
-
 .line-with-circles {
+  grid-area: 3 / 1 / 4 / 4; /* Areas 7-9 */
   margin-top: 4rem;
   width: 100%;
   display: flex;
@@ -82,7 +121,7 @@ button:focus-visible {
   justify-content: space-around;
   width: 80%;
   position: relative;
-  margin-top: -3.2rem;
+  margin-top: -4.5vh;
 }
 
 .circle-container {
@@ -90,8 +129,8 @@ button:focus-visible {
 }
 
 .circle {
-  width: 6rem;
-  height: 6rem;
+  width: 8vh;
+  height: 8vh;
   border: 3px solid #ffffff;
   border-radius: 50%;
   cursor: pointer;
@@ -106,18 +145,91 @@ button:focus-visible {
 }
 
 .circle-icon {
-  width: 6rem;
-  height: 6rem;
-  margin-top: 1rem;
+  width: 8vh;
+  height: 68h;
+  margin-top: 1.7vh;
 }
 
 .circle-dropdown {
   position: absolute;
-  top: 1.5rem;
+  top: 2.8rem; /* Adjusted to fit below the larger circle */
   left: 50%;
   transform: translateX(-50%);
   background-color: #8a8a8a;
   color: #ffffff;
   border: 1px solid #ffffff;
   border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.circle-dropdown div {
+  padding: 0.2rem 0;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.circle-dropdown div:hover {
+  background-color: #646cff;
+}
+
+.startButton {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background-color: #646cff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.startButton:hover {
+  background-color: #5353ff;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 15vh repeat(6, auto);
+  }
+
+  .tempo-selection,
+  .counter-container,
+  .beats-per-measure-selection,
+  .line-with-circles {
+    grid-column: 1 / -1;
+  }
+
+  .counter {
+    height: 30vh;
+    width: 30vh;
+  }
+
+  .half-circle {
+    width: 100%;
+    height: 100%;
+  }
+
+  .count {
+    font-size: 8vh;
+    width: 4rem; /* Adjusted width for smaller screens */
+  }
+
+  .circle {
+    width: 5vh;
+    height: 5vh;
+  }
+
+  .circle-icon {
+    width: 2.5vh;
+    height: 2.5vh;
+  }
 }

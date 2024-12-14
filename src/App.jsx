@@ -3,7 +3,6 @@ import "./App.css";
 import snareSound from "./resources/wav/snare.wav";
 import kickSound from "./resources/wav/kick.wav";
 import Counter from "./components/Counter";
-import Controls from "./components/Controls";
 import useAudio from "./hooks/useAudio";
 import Timeline from "./components/Timeline";
 
@@ -106,15 +105,18 @@ function App() {
   };
 
   return (
-    <>
-    <h1>Beat By Leonard</h1>
-      <Counter count={count} running={running} onClick={handleStartStop} />
-      <Controls
-        tempo={tempo}
-        beatsPerMeasure={beatsPerMeasure}
-        onTempoChange={handleTempoChange}
-        onBeatsPerMeasureChange={handleBeatsPerMeasureChange}
-      />
+    <div className="container">
+      <div className="header-space"></div>
+      <div className="counter-container">
+        <Counter
+          tempo={tempo}
+          beatsPerMeasure={beatsPerMeasure}
+          onTempoChange={handleTempoChange}
+          onBeatsPerMeasureChange={handleBeatsPerMeasureChange}
+          onStartStop={handleStartStop}
+          running={running}
+        />
+      </div>
       <Timeline
         beatsPerMeasure={beatsPerMeasure}
         beatSounds={beatSounds}
@@ -124,7 +126,7 @@ function App() {
         handleBeatSoundChange={handleBeatSoundChange}
         handleIconClick={handleIconClick}
       />
-    </>
+    </div>
   );
 }
 
