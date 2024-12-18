@@ -59,7 +59,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 20rem; /* Fixed width to prevent shifting */
+  max-width: 20rem;
 }
 
 .tempo-controls button {
@@ -68,12 +68,17 @@
   font-size: 9vh;
 }
 
+.tempo-controls button {
+    font-size: 6rem;
+  }
+
+
 .count {
-  font-size: 20vh;
+  font-size: 9rem;
   color: #ffffff;
   margin: 0 1rem;
   flex-shrink: 0;
-  width: 20vw;
+  width: 12vw;
   text-align: center;
 }
 
@@ -100,7 +105,7 @@ button:focus-visible, select:focus-visible {
 }
 
 .line-with-circles {
-  grid-area: 3 / 1 / 4 / 4; /* Areas 7-9 */
+  grid-area: 3 / 1 / 4 / 4;
   margin-top: 4rem;
   width: 100%;
   display: flex;
@@ -198,7 +203,9 @@ button:focus-visible, select:focus-visible {
 @media (max-width: 768px) {
   .container {
     grid-template-columns: 1fr;
-    grid-template-rows: 15vh repeat(6, auto);
+    grid-template-rows: 15vh repeat(2, auto);
+    align-items: center;
+    padding: 4vw;
   }
 
   .tempo-selection,
@@ -209,8 +216,8 @@ button:focus-visible, select:focus-visible {
   }
 
   .counter {
-    height: 30vh;
-    width: 30vh;
+    height: 40vh;
+    width: 40vh;
   }
 
   .half-circle {
@@ -218,18 +225,42 @@ button:focus-visible, select:focus-visible {
     height: 100%;
   }
 
-  .count {
-    font-size: 8vh;
-    width: 4rem; /* Adjusted width for smaller screens */
+  .tempo-controls button {
+    font-size: 6rem;
   }
 
+  .tempo-controls button,
+  .count {
+    margin: 0 7vw;
+  }
+
+  .count {
+    font-size: 13vh;
+    width: 10vh; /* Adjusted width for smaller screens */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .line {
+    width: 90vw;
+  }
+
+  .line-with-circles {
+    margin-top: 2rem;
+  }
+  .circles {
+    width: 90vw;
+  }
   .circle {
+    margin-top: 1.5vh;
     width: 5vh;
     height: 5vh;
   }
 
   .circle-icon {
-    width: 2.5vh;
-    height: 2.5vh;
+    margin-top: 1vh;
+    width: 6vh;
+    height: 6vh;
   }
 }

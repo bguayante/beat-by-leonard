@@ -50,6 +50,7 @@ function Counter({
             onMouseDown={() => handleMouseDown(-1)}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            className="tempo-inc-dec"
           >
             -
           </button>
@@ -59,6 +60,7 @@ function Counter({
             onMouseDown={() => handleMouseDown(1)}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            className="tempo-inc-dec"
           >
             +
           </button>

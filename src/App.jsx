@@ -49,7 +49,7 @@ function App() {
 
   const startSequence = () => {
     let index = 0;
-    playBeat(index); // Play the first beat immediately
+    playBeat(index);
     const interval = 60000 / tempo;
     intervalRef.current = setInterval(() => {
       index = (index + 1) % beatsPerMeasure;
