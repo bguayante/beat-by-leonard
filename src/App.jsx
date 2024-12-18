@@ -14,6 +14,7 @@ function App() {
   const [beatSounds, setBeatSounds] = useState(Array(4).fill("metronome"));
   const [filledCircles, setFilledCircles] = useState(Array(4).fill(false));
   const [dropdownVisible, setDropdownVisible] = useState(Array(4).fill(false));
+  const [tapTempo, setTapTempo] = useState([]);
   const intervalRef = useRef(null);
 
   const {
@@ -104,6 +105,22 @@ function App() {
     setBeatSounds(newBeatSounds);
   };
 
+  const handleTapTempo = () => {
+    const now = Date.now();
+    const newTapTempo = [...tapTempo, now];
+    if (newTapTempo.length > 1) {
+      const intervals = newTapTempo.slice(1).map((time, i) => time - newTapTempo[i]);
+      const averageInterval = intervals.reduce((a, b) => a + b) / intervals.length;
+      const newTempo = Math.round(60000 / averageInterval);
+      setTempo(newTempo);
+      if (running) {
+        clearInterval(intervalRef.current);
+        startSequence();
+      }
+    }
+    setTapTempo(newTapTempo.slice(-5)); // Keep only the last 5 taps
+  };
+
   return (
     <div className="container">
       <div className="header-space"></div>
@@ -115,6 +132,7 @@ function App() {
           onBeatsPerMeasureChange={handleBeatsPerMeasureChange}
           onStartStop={handleStartStop}
           running={running}
+          onTapTempo={handleTapTempo}
         />
       </div>
       <Timeline

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 function Counter({
   tempo,
@@ -7,13 +7,14 @@ function Counter({
   onBeatsPerMeasureChange,
   onStartStop,
   running,
+  onTapTempo,
 }) {
   const [intervalId, setIntervalId] = useState(null);
 
   const handleMouseDown = (change) => {
     const id = setInterval(() => {
       onTempoChange((prevTempo) => prevTempo + change);
-    }, 100);
+    }, 80);
     setIntervalId(id);
   };
 
@@ -38,9 +39,9 @@ function Counter({
           value={beatsPerMeasure}
           onChange={(e) => onBeatsPerMeasureChange(Number(e.target.value))}
         >
-          {[2, 3, 4, 5, 6, 7, 8].map((value) => (
-            <option key={value} value={value}>
-              {value} Beats
+          {[...Array(15).keys()].map((value) => (
+            <option key={value + 2} value={value + 2}>
+              {value + 2} Beats
             </option>
           ))}
         </select>
@@ -54,7 +55,7 @@ function Counter({
           >
             -
           </button>
-          <div className="count">{tempo}</div>
+          <div className="count" onClick={onTapTempo}>{tempo}</div>
           <button
             onClick={() => handleClick(1)}
             onMouseDown={() => handleMouseDown(1)}

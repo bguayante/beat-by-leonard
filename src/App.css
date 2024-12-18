@@ -72,7 +72,6 @@
     font-size: 6rem;
   }
 
-
 .count {
   font-size: 9rem;
   color: #ffffff;
@@ -80,6 +79,8 @@
   flex-shrink: 0;
   width: 12vw;
   text-align: center;
+  user-select: none;
+  cursor: default;
 }
 
 button, select {
@@ -95,14 +96,10 @@ button, select {
   transition: border-color 0.25s;
 }
 
-button:hover, select:hover {
-  border-color: #646cff;
-}
-
-button:focus, select:focus,
+/* button:focus, select:focus,
 button:focus-visible, select:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
+} */
 
 .line-with-circles {
   grid-area: 3 / 1 / 4 / 4;
@@ -178,9 +175,9 @@ button:focus-visible, select:focus-visible {
   cursor: pointer;
 }
 
-.circle-dropdown div:hover {
+/* .circle-dropdown div:hover {
   background-color: #646cff;
-}
+} */
 
 .startButton {
   margin-top: 1rem;
